@@ -1,0 +1,254 @@
+# CalCheck - Calendar Sync Verification App
+
+## Full Product Description
+
+CalCheck is an innovative iOS application designed to solve a common but often overlooked problem: verifying that your calendar is actually syncing properly across all your devices. In our increasingly connected world, we rely on calendar synchronization to keep our schedules consistent across iPhones, iPads, Macs, and other devices. However, sync failures can occur silently, leaving you unaware that your calendar updates aren't reaching all your devices until it's too late.
+
+## The Problem CalCheck Solves
+
+Have you ever added an important meeting to your calendar on your iPhone, only to discover later that it never appeared on your iPad or Mac? Or worse, have you missed an appointment because a calendar update didn't sync properly? Traditional calendar apps don't provide any way to verify that synchronization is actually working - they simply assume it is. CalCheck fills this critical gap by providing active verification that your calendar sync is functioning correctly.
+
+## How CalCheck Works
+
+### The Sync Verification Method
+
+CalCheck uses a clever and non-intrusive approach to verify calendar synchronization:
+
+1. **Test Event Creation**: CalCheck creates a single, harmless test event in your selected calendar, positioned 14 days in the past where it won't clutter your current view.
+
+2. **Automatic Updates**: Every 2 hours (or on-demand), CalCheck updates this test event with fresh timestamp information.
+
+3. **Cross-Device Detection**: When CalCheck is installed on multiple devices, each instance can detect the test events created by other devices, confirming that sync is working bidirectionally.
+
+4. **Smart Cleanup**: The app maintains only one test event per device, automatically removing old events to keep your calendar clean.
+
+5. **Background Monitoring**: With background sync enabled, CalCheck works silently to verify your calendar is syncing even when you're not actively using the app.
+
+## Key Features
+
+### 🔄 Automatic Calendar Check
+- Performs automatic sync verification every 2 hours
+- Works in the background without user intervention
+- Supports both modern iOS background tasks and legacy background fetch for maximum compatibility
+- Particularly optimized for iOS 15.8+ compatibility on iPad
+
+### 📱 Multi-Device Awareness
+- Detects and displays other devices using CalCheck with the same calendar
+- Shows when each device last performed a sync check
+- Tracks successful sync operations across your device ecosystem
+- Each device gets a unique identifier for easy tracking
+
+### 🎯 Service Status Indicator
+- Clear visual status: 
+  - 🔴 Disabled - Service is turned off
+  - 🟡 Waiting - Needs calendar selection
+  - 🟢 Active - Monitoring your calendar sync
+- Real-time status updates
+- Always know if your sync verification is active
+
+### 📊 Sync History Tracking
+- Maintains a detailed log of the last 50 sync operations
+- Shows timestamps and intervals between syncs
+- Helps identify patterns in sync behavior
+- Can be cleared when needed
+
+### 🔍 Current Sync Event Display
+- Shows details of the active test event
+- Displays creation time, last update, and update count
+- Includes unique App ID for device identification
+- Refresh button for instant status check
+
+### 📅 Calendar Selection
+- Choose any calendar for sync verification
+- Support for all calendar types (iCloud, Exchange, Google, etc.)
+- Visual calendar color indicators
+- Search functionality for easy calendar location
+
+### 🛡️ Privacy-Focused Design
+- Creates only ONE test event per device
+- Test event is placed 14 days in the past to avoid clutter
+- No access to your actual calendar events
+- No data leaves your device
+- No analytics or tracking
+
+### 🎨 User-Friendly Interface
+- Settings-first design for easy configuration
+- Clear onboarding process for new users
+- Step-by-step permission guides
+- iPad-optimized interface with proper navigation
+
+### ⚡ Smart Background Operations
+- Dual-mode background sync (modern + legacy)
+- Battery-efficient operation
+- No external power requirement
+- Automatic scheduling of next sync
+
+## Technical Specifications
+
+### Compatibility
+- **Minimum iOS Version**: iOS 15.6
+- **Supported Devices**: All iPhones and iPads running iOS 15.6+
+- **Optimized for**: iOS 15.8 (iPad), iOS 16, iOS 17, iOS 18
+- **Calendar Systems**: Works with any calendar accessible through iOS EventKit
+
+### Permissions Required
+- **Calendar Access**: Required to create and monitor the test sync event
+- **Notifications** (Optional): For sync reminder notifications
+- **Background App Refresh**: For automatic background sync verification
+
+### Background Sync Methods
+- **iOS 13+**: BGProcessingTask for modern background processing
+- **iOS 15.x Fallback**: UIApplication performFetchWithCompletionHandler
+- **Sync Frequency**: Every 2 hours when enabled
+- **Manual Sync**: Available anytime through the app
+
+## Use Cases
+
+### For Professionals
+- Ensure critical meeting updates sync across all devices
+- Verify calendar sync before important trips
+- Maintain confidence in cross-device scheduling
+- Detect sync issues before they cause missed appointments
+
+### For Families
+- Confirm shared family calendars are syncing properly
+- Ensure everyone sees the latest schedule updates
+- Peace of mind for coordinated family activities
+- Quick verification before family events
+
+### For Power Users
+- Monitor sync health across multiple devices
+- Track sync patterns and intervals
+- Identify devices with sync issues
+- Maintain multiple calendar verifications
+
+### For IT Administrators
+- Verify enterprise calendar sync functionality
+- Troubleshoot user sync issues
+- Confirm Exchange/Google Workspace calendar sync
+- Simple tool for sync verification
+
+## App Store Short Description (170 characters)
+
+"Never wonder if your calendar is syncing! CalCheck automatically verifies calendar synchronization across all your devices. Peace of mind for your important schedule."
+
+## App Store Keywords
+
+calendar, sync, verification, synchronization, iCloud, schedule, productivity, utilities, calendar sync, sync check, calendar verify, multi-device, background sync, calendar monitor
+
+## Marketing Taglines
+
+### Primary Tagline
+"Your Calendar's Safety Net"
+
+### Alternative Taglines
+- "Trust, but Verify Your Calendar Sync"
+- "Know Your Calendar is Actually Syncing"
+- "Silent Guardian for Your Schedule"
+- "Calendar Sync Confidence"
+- "Never Miss a Sync Again"
+
+## Frequently Asked Questions (FAQ)
+
+### Q: How does CalCheck verify my calendar is syncing?
+A: CalCheck creates a single test event 14 days in the past and updates it regularly. When this event appears and updates on all your devices, you know sync is working.
+
+### Q: Will CalCheck clutter my calendar?
+A: No! CalCheck creates only ONE test event per device, placed 14 days in the past where it won't interfere with your current schedule. Old events are automatically cleaned up.
+
+### Q: Does CalCheck work with all calendar types?
+A: Yes! CalCheck works with any calendar accessible through iOS, including iCloud, Google, Exchange, and other CalDAV calendars.
+
+### Q: How often does CalCheck verify sync?
+A: By default, CalCheck performs automatic verification every 2 hours. You can also trigger manual sync checks anytime.
+
+### Q: Is my calendar data private?
+A: Absolutely! CalCheck only creates its own test event and never reads your actual calendar entries. No data leaves your device.
+
+### Q: Why do I need CalCheck if my calendar already syncs?
+A: Calendar sync can fail silently without any notification. CalCheck provides active verification, giving you confidence that sync is actually working.
+
+### Q: Does CalCheck drain my battery?
+A: No. CalCheck uses efficient background processing and only runs briefly every 2 hours. It doesn't require external power and has minimal battery impact.
+
+### Q: Can I use CalCheck on multiple devices?
+A: Yes! In fact, CalCheck works best when installed on all your devices. Each device can detect the others' test events, confirming bidirectional sync.
+
+### Q: What iOS versions are supported?
+A: CalCheck supports iOS 15.6 and later, with special optimizations for iOS 15.8 (particularly on iPad) and full support for iOS 16, 17, and 18.
+
+### Q: How do I know CalCheck is working?
+A: Check the service status indicator: 🟢 Green means active monitoring, 🟡 Yellow means waiting for calendar selection, 🔴 Red means disabled.
+
+## Version History Highlights
+
+### Version 1.0
+- Initial release with core sync verification
+- Multi-device detection
+- Background sync support
+- Sync history tracking
+
+### Recent Updates
+- iOS 15.8 iPad compatibility improvements
+- Dual-mode background sync (modern + legacy)
+- Enhanced UI with Settings-first design
+- Service status indicator
+- Automatic enablement of background sync
+- Improved permission onboarding
+- Other devices tracking
+- Last successful sync display
+
+## Privacy Policy Summary
+
+CalCheck is designed with privacy as a core principle:
+- No user data collection
+- No analytics or tracking
+- No network requests to external servers
+- All processing happens on-device
+- Only accesses calendars to create/update test events
+- No access to actual calendar event content
+- No personal information storage
+
+## Support Information
+
+### System Requirements
+- iOS 15.6 or later
+- Calendar app installed
+- Calendar access permission
+- Background App Refresh enabled (for automatic checks)
+
+### Troubleshooting Tips
+1. Ensure Calendar access is granted in Settings
+2. Enable Background App Refresh for automatic monitoring
+3. Select a calendar that syncs across your devices
+4. Check that the same calendar is selected on all devices
+5. Verify your devices are signed into the same account
+6. Ensure internet connectivity for sync operations
+
+## Technical Implementation Notes
+
+### Architecture
+- SwiftUI-based modern iOS app
+- EventKit framework for calendar integration
+- BackgroundTasks framework for modern background processing
+- UIApplication background fetch for iOS 15.x compatibility
+- UserDefaults for settings persistence
+- No external dependencies
+
+### Sync Event Structure
+- Title: "📅 CalCheck Sync - [Device Name]"
+- Location: 14 days in the past at 4:00 AM
+- Duration: 1 hour
+- Contains: Device info, timestamps, update count, app instance ID
+- Auto-cleanup: Removes duplicate or old events
+
+## Contact & Support
+
+For support, feature requests, or bug reports, users can:
+- Use the in-app feedback option
+- Visit the support website
+- Contact through the App Store
+
+---
+
+This comprehensive description provides all the information needed for marketing, support, and user understanding of CalCheck. It can be adapted for various purposes from App Store listings to support documentation.
