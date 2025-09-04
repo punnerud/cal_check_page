@@ -288,35 +288,7 @@
             color: #ce9178;
         }
         
-        /* Video Section */
-        .video-container {
-            margin: 3rem auto;
-            max-width: 900px;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            background: rgba(0, 0, 0, 0.1);
-            padding: 4px;
-        }
-        
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-            background: #000;
-        }
-        
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
+        /* Screenshot label styling */
         .video-label {
             text-align: center;
             color: white;
@@ -488,42 +460,79 @@
         }
         
         /* Screenshot carousel */
-        .screenshots {
-            padding: 60px 0;
-            background: white;
-        }
-        
-        .screenshots h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #2c3e50;
-        }
         
         .screenshot-carousel {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             overflow-x: auto;
-            padding: 1rem 0;
-            scroll-snap-type: x mandatory;
+            padding: 2rem 1rem;
+            margin: 3rem auto;
+            max-width: 100%;
+            justify-content: flex-start;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .screenshot-carousel:active {
+            cursor: grabbing;
+        }
+        
+        .screenshot-carousel::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .screenshot-carousel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        .screenshot-carousel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        .screenshot-carousel::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         
         .screenshot {
             flex: 0 0 auto;
-            width: 600px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            scroll-snap-align: center;
-            background: #f0f0f0;
-            padding: 1rem;
-            text-align: center;
-            color: #666;
+            width: 300px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .screenshot:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
         }
         
         .screenshot img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
+            border-radius: 12px;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+        
+        .screenshot-ipad {
+            width: 500px !important;
         }
     </style>
     <!-- Google tag (gtag.js) -->
@@ -618,92 +627,76 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Track YouTube video interactions
-    let videoPlayed = false;
-    let videoProgress = {};
-    
-    // YouTube API callback
-    window.onYouTubeIframeAPIReady = function() {
-        const iframe = document.querySelector('iframe[src*="youtube.com"]');
-        if (iframe) {
-            new YT.Player(iframe, {
-                events: {
-                    'onStateChange': onPlayerStateChange,
-                    'onReady': onPlayerReady
-                }
+    // Track screenshot carousel interactions
+    const carousel = document.querySelector('.screenshot-carousel');
+    if (carousel) {
+        const screenshots = carousel.querySelectorAll('.screenshot');
+        screenshots.forEach((screenshot, index) => {
+            screenshot.addEventListener('click', function() {
+                gtag('event', 'click', {
+                    'event_category': 'engagement',
+                    'event_label': 'Screenshot Carousel - Item ' + (index + 1),
+                    'value': index + 1
+                });
             });
-        }
-    };
-
-    // Load YouTube API
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    function onPlayerReady(event) {
-        // Track when video is loaded
-        gtag('event', 'video_load', {
-            'event_category': 'video',
-            'event_label': 'Demo Video Ready'
         });
-    }
 
-    function onPlayerStateChange(event) {
-        const playerStatus = event.data;
-        const videoId = '0lNL4K-75PE';
-        
-        switch(playerStatus) {
-            case YT.PlayerState.PLAYING:
-                if (!videoPlayed) {
-                    gtag('event', 'video_play', {
-                        'event_category': 'video',
-                        'event_label': 'Demo Video - First Play',
-                        'value': 1
-                    });
-                    videoPlayed = true;
-                }
-                
-                // Track progress at 25%, 50%, 75%, 100%
-                const duration = event.target.getDuration();
-                const checkpoints = [0.25, 0.5, 0.75, 1.0];
-                
-                const trackProgress = setInterval(() => {
-                    const currentTime = event.target.getCurrentTime();
-                    const progress = currentTime / duration;
-                    
-                    checkpoints.forEach(checkpoint => {
-                        if (progress >= checkpoint && !videoProgress[checkpoint]) {
-                            videoProgress[checkpoint] = true;
-                            gtag('event', 'video_progress', {
-                                'event_category': 'video',
-                                'event_label': 'Demo Video - ' + (checkpoint * 100) + '% watched',
-                                'value': checkpoint * 100
-                            });
-                        }
-                    });
-                    
-                    if (event.target.getPlayerState() !== YT.PlayerState.PLAYING) {
-                        clearInterval(trackProgress);
-                    }
-                }, 1000);
-                break;
-                
-            case YT.PlayerState.PAUSED:
-                gtag('event', 'video_pause', {
-                    'event_category': 'video',
-                    'event_label': 'Demo Video Paused'
+        // Add drag to scroll functionality
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            carousel.style.cursor = 'grabbing';
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            isDown = false;
+            carousel.style.cursor = 'grab';
+        });
+
+        carousel.addEventListener('mouseup', () => {
+            isDown = false;
+            carousel.style.cursor = 'grab';
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2; // Scroll speed
+            carousel.scrollLeft = scrollLeft - walk;
+        });
+
+        // Touch support for mobile
+        let touchStartX = 0;
+        let touchScrollLeft = 0;
+
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].pageX - carousel.offsetLeft;
+            touchScrollLeft = carousel.scrollLeft;
+        });
+
+        carousel.addEventListener('touchmove', (e) => {
+            const x = e.touches[0].pageX - carousel.offsetLeft;
+            const walk = (x - touchStartX) * 2;
+            carousel.scrollLeft = touchScrollLeft - walk;
+        });
+
+        // Track carousel scroll
+        let scrollTimeout;
+        carousel.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                gtag('event', 'scroll', {
+                    'event_category': 'engagement',
+                    'event_label': 'Screenshot Carousel Scrolled'
                 });
-                break;
-                
-            case YT.PlayerState.ENDED:
-                gtag('event', 'video_complete', {
-                    'event_category': 'video',
-                    'event_label': 'Demo Video - Completed',
-                    'value': 100
-                });
-                break;
-        }
+            }, 500);
+        }, { once: true }); // Track only first scroll
     }
 
     // Track scroll depth
@@ -816,7 +809,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <li><a href="#features">Features</a></li>
                 <li><a href="#how-it-works">How It Works</a></li>
                 <li><a href="#use-cases">Use Cases</a></li>
-                <li><a href="https://apps.apple.com/app/calcheck/id123456789">Download</a></li>
+                <li><a href="https://apps.apple.com/app/calcheck/id6751807561">Download</a></li>
             </ul>
         </nav>
     </header>
@@ -827,14 +820,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <h1>Your Calendar's Safety Net</h1>
             <p class="subtitle">Never wonder if your calendar is actually syncing across devices</p>
             <div class="hero-buttons">
-                <a href="https://apps.apple.com/app/calcheck/id123456789" class="btn btn-primary">
+                <a href="https://apps.apple.com/app/calcheck/id6751807561" class="btn btn-primary">
                     <span>📱</span> Download for iOS
                 </a>
                 <a href="#features" class="btn btn-secondary">Learn More</a>
             </div>
             <p style="opacity: 0.9; margin-bottom: 1rem;">✨ Free to use • iOS 15.6+ • iPad optimized</p>
             <div class="app-store-badge">
-                <a href="https://apps.apple.com/app/calcheck/id123456789">
+                <a href="https://apps.apple.com/app/calcheck/id6751807561">
                     <svg width="180" height="60" viewBox="0 0 180 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="180" height="60" rx="12" fill="black"/>
                         <text x="90" y="25" text-anchor="middle" fill="white" font-size="11" font-family="-apple-system, BlinkMacSystemFont, sans-serif">Download on the</text>
@@ -845,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             <!-- Social Proof Badges -->
             <div class="social-proof-badges">
-                <a href="https://news.ycombinator.com/item?id=45050090" target="_blank" class="badge-link hn-badge">
+                <a href="https://news.ycombinator.com/item?id=45124339" target="_blank" class="badge-link hn-badge">
                     <div class="badge-content">
                         <span class="hn-logo">Y</span>
                         <div class="badge-text">
@@ -854,21 +847,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 </a>
-                <a href="https://www.producthunt.com/products/never-lose-your-work-again?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-never&#0045;lose&#0045;your&#0045;work&#0045;again" target="_blank" class="ph-embed-badge">
-                    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1010439&theme=light&t=1756468976425" alt="Never&#0032;lose&#0032;your&#0032;work&#0032;again&#0032; - Checkpoints&#0032;for&#0032;claude&#0032;code&#0032; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
+                <a href="https://www.producthunt.com/products/calcheck-calendar-sync-validator?launch=calcheck-calendar-sync-validator" target="_blank" class="ph-embed-badge">
+                    <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1010439&theme=light&t=1756468976425" alt="CalCheck - Calendar Sync Validator | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
                 </a>
             </div>
             
-            <!-- Demo Video -->
-            <div class="video-label">🎬 Watch it in action:</div>
-            <div class="video-container">
-                <div class="video-wrapper">
-                    <iframe 
-                        src="https://www.youtube.com/embed/0lNL4K-75PE" 
-                        title="Claude Checkpoints Demo"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen>
-                    </iframe>
+            <!-- Screenshots Carousel -->
+            <div class="video-label">📱 See it in action:</div>
+            <div class="screenshot-carousel">
+                <div class="screenshot">
+                    <img src="img/0.PNG" alt="CalCheck Screenshot 1">
+                </div>
+                <div class="screenshot">
+                    <img src="img/1.PNG" alt="CalCheck Screenshot 2">
+                </div>
+                <div class="screenshot screenshot-ipad">
+                    <img src="img/2.PNG" alt="CalCheck iPad Screenshot">
+                </div>
+                <div class="screenshot">
+                    <img src="img/3.PNG" alt="CalCheck Screenshot 4">
                 </div>
             </div>
         </div>
@@ -977,38 +974,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </section>
 
-    <!-- Screenshots Section -->
-    <section class="screenshots">
-        <div class="container">
-            <h2>See CalCheck In Action</h2>
-            <div class="screenshot-carousel">
-                <div class="screenshot">
-                    <div style="height: 400px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 8px; color: white;">
-                        <div>
-                            <h3>Service Status View</h3>
-                            <p>Monitor your calendar sync status at a glance</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="screenshot">
-                    <div style="height: 400px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 8px; color: white;">
-                        <div>
-                            <h3>Multi-Device Tracking</h3>
-                            <p>See all your devices and their sync status</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="screenshot">
-                    <div style="height: 400px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4CAF50, #2E7D32); border-radius: 8px; color: white;">
-                        <div>
-                            <h3>Sync History</h3>
-                            <p>Track sync patterns and intervals</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer>
@@ -1018,7 +983,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <p>Your Calendar's Safety Net</p>
             </div>
             <ul class="footer-links">
-                <li><a href="https://apps.apple.com/app/calcheck/id123456789">App Store</a></li>
+                <li><a href="https://apps.apple.com/app/calcheck/id6751807561">App Store</a></li>
                 <li><a href="mailto:support@calcheck-app.com">Support</a></li>
                 <li><a href="#privacy">Privacy</a></li>
             </ul>
